@@ -1,2 +1,2 @@
 # Data-Science-Journey
-Here i relate data science concepts to my current job as a supply chain analyst and purchasing manager
+Here I want to record learning different concepts in data science and write reproduceable code for me to come back at a later date and copy and paste if I need a refresher!
