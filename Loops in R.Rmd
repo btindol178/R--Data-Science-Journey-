@@ -1,0 +1,126 @@
+---
+title: "Loops"
+author: "Blake Tindol"
+date: "6/14/2020"
+output: html_document
+---
+## Loops using a vector
+Create a random vector for manipulation
+```{r}
+# Loops Working with a vector
+set.seed(123) # ensure it is reproducible
+df <-data.frame(sample(15:35, 10, replace=FALSE))
+colnames(df)[1] <- "c1" # make column one called c1
+```
+
+## Looping over the dataframe column
+Print out every value
+``` {r}
+for(i in 1:length(df$c1)){
+  print(i)
+}
+```
+
+# Minus one from every value in column
+```{r}
+for(i in 1:length(df$c1) -1) {
+  print(i)
+}
+
+for(i in 1:length(df$c1) +1) {
+  print(i)
+}
+
+
+```
+
+## Create two column dataframe
+```{r}
+df2 <-data.frame(sample(15:35, 10, replace=FALSE))                 
+df3 <-data.frame(sample(15:35, 10, replace=FALSE))
+df4 <- cbind(df2,df3)
+colnames(df4)[1]<-"c1"
+colnames(df4)[2]<-"c2"
+```
+
+## Multiplication of values
+Make new column by multipling 2 columns 
+```{r}
+for(i in 1:length(df4)){
+  df4$c3 <- df4$c1*df4$c2
+}
+head(df4)
+
+```
+
+## Nested Loops 
+Print loop
+```{r}
+df2 <-data.frame(sample(15:35, 10, replace=FALSE))                 
+df3 <-data.frame(sample(15:35, 10, replace=FALSE))
+df4 <-data.frame(sample(15:35, 10, replace=FALSE))
+df5<-data.frame(sample(15:35, 10, replace=FALSE))
+df6 <-data.frame(sample(15:35, 10, replace=FALSE))
+df <- cbind(df2,df3,df4,df5,df6)
+colnames(df)[1]<-"c1"
+colnames(df)[2]<-"c2"
+colnames(df)[3]<-"c3"
+colnames(df)[4]<-"c4"
+colnames(df)[5]<-"c5"
+
+
+for(row in 1:nrow(df)) {
+  for(col in 1:ncol(df)) {
+    print(df[row, col])
+  }
+}
+
+# Just to understand the make up of the dataframe for further use
+print(df)
+```
+
+
+
+## More Nested Loops
+```{r}
+# Create a nested loop
+for(row in 1:nrow(df)) {
+  for(col in 1:ncol(df)) {
+    print(paste(colnames(df)[col], "and", rownames(df)[row],
+                "have a value of", df[row,col]))
+  }
+}
+```
+ 
+# Shifting Positions
+```{r}
+# Create a nested loop
+for(row in 1:nrow(df) - 1) { # This shifts the whole data frame up one row that is why there is no value to print
+  for(col in 1:ncol(df)) {
+    print(paste(colnames(df)[col], "and", rownames(df)[row],
+                "have a correlation of", df[row,col]))
+  }
+}
+```
+
+# Shifting Continued
+``` {r}
+# Create a nested loop
+for(row in 1:nrow(df)) { 
+  for(col in 1:ncol(df)+1) {# This shifts the whole data frame over to the right one that is why there is no far left column value to print - 1 will shift dataframe over the right left 1 making far right column empty
+    print(paste(colnames(df)[col], "and", rownames(df)[row],
+                "have a correlation of", df[row,col]))
+  }
+}
+```
+
+
+## Simulation of random sampling 
+```{r}
+df <- rep(NA, 10000) # make vector of 10000 empty NA cells
+for(i in 1:10000){
+    a <- rpois(50, lambda=20) # possion distribution lambda is center value (median)
+    df[i] <-mean(a) # take the mean of the 50 differnt values 
+}
+hist(df) # make histograme
+```
