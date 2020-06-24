@@ -1,0 +1,53 @@
+---
+title: "Mobility"
+author: "Blake Tindol"
+date: "6/24/2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+# Load dataframe
+```{r}
+
+require(data.table)
+require(shiny)
+require(plotly)
+
+df2 <- read.csv("mobility.csv");df2 <- df2[-c(1)]
+
+head(df2)
+
+```
+
+## Plotting google mobility data
+
+```{r cars}
+
+df2$label <- with(df2, paste(code, '<br>', "retail", retail, "grocery", grocery, "<br>",
+                           "parks", parks, "transit", transit,
+                           "<br>", "workspace", workspace, "residential", residential))
+# give state boundaries a white border
+l <- list(color = toRGB("white"), width = 2)
+# specify some map projection/options
+g <- list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showlakes = TRUE,
+  lakecolor = toRGB('white')
+)
+
+fig <- plot_geo(df2, locationmode = 'USA-states')
+fig <- fig %>% add_trace(
+  z = ~retail, text = ~label, locations = ~code,
+  color = ~retail, colors = 'Purples'
+)
+fig <- fig %>% colorbar(title = "Change in Retail")
+fig <- fig %>% layout(
+  title = '2020 covid mobility tracing<br>(retail response)',
+  geo = g
+)
+
+fig
+
+```
+
