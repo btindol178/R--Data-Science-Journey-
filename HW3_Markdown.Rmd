@@ -1,0 +1,161 @@
+---
+title: "Homework 3"
+output:
+  word_document: default
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+# Homework 3 Blake Tindol & Sydney Haase
+```{r global, include=FALSE}
+# Prepare workspace
+rm(list=ls())
+setwd('C:/Users/blake/OneDrive/WMU FALL 2020/Regression/HW3')
+
+#install.packages("tinytex", lib = "C:/R/R-4.0.2/library")
+
+#library(tinytex)
+
+# Load Muscle mass dataset
+muscle <- read.csv("muscle_mass.csv")
+mass <- muscle$mass
+
+# Load Production dataset
+production <- read.table("production.txt")
+colnames (production) = c ('y','x')
+```
+
+### Q1 a) What is the predicted value and 95% confidence interval for the mean muscle mass for women of age 60?
+
+```{r code1}
+fit <- lm(mass ~ age, data = muscle)
+new.data = data.frame(age = 60)
+newpred <- predict(fit, newdata =new.data,interval = 'predict',level = 0.95)
+newpred
+
+# 95% of predicted values  fall between 68.45 and 101.44
+# 84.95 is the mean predicted muscle mass for womens age of 60  95% of time is going to be between 68.45 and 101.443
+
+
+```
+
+### Q1 b) plot the residuals yi=y^i against xi on graph
+
+```{r code2}
+plot(muscle$age, fit$residuals,main = "Residuals",ylim=c(-25, 25))
+
+```
+
+### Q1 c) plot the values yi=y^i against xi on graph
+
+```{r code3}
+muscle$fitvalues  <- predict(fit) - mean(muscle$mass)
+plot(muscle$age, muscle$fitvalues,ylim=c(-25, 25))
+
+```
+
+### Q1 d) From two graphs in part b and c does sse or ssr appear larger component of SSTO? what does this imply of magnitude of R2?
+```{r code4}
+# SSE is smaller than SSR that implys that the r squared is larger
+# When see is small, SSR large and Rsquare is large 
+# When SSE large, SSR small R square is small 
+```
+
+### Q1 e) Provide the anova table.
+```{r code5}
+anova(fit)
+
+```
+
+
+### Q1 f) What portion of the total variance in muscle mass remains unexplained when age is added into the model? is this portion relatively small or large?
+```{r code6}
+fit.reduced = lm(mass ~age,data=muscle)
+summary(fit.reduced)$r.squared
+
+ # 75% of the total variance is explained in the model 
+# 25% of the model reamins unexplained
+```
+
+### Q1 g) Conduct a hypothesis test using an F test with a significance level of .05 clearly state the alternatives, test the statistics and conclusion.
+```{r code7}
+anova(fit)
+# since p-value is very small we reject H0 there is enough evidence that there is a linear association between x and y. 
+
+```
+
+### Q1 h) Obtain r and R2.
+```{r code8}
+cor(muscle$mass,muscle$age) # R again
+cor(muscle$mass,muscle$age)^2 # R squared
+# slope is negative so r is negative
+
+```
+
+### Q2 a) plot a scatter plot of the data. Is a simple linear regression appropirate? 
+```{r code9}
+plot(production$x,production$y,ylab = "y",xlab = "x",main = "production")
+abline(lm(production$y~ production$x, data = production), col = "blue")
+
+# Yes there appears to be no curvilinear trends between x and y 
+
+```
+
+### Q2 b) Obtain the estimated linear regression function for the data
+```{r code10}
+fit2 <- lm(y ~ x, data= production)
+summary(fit2)
+# y^ = 6.86349  + 0.53 xi (fitted regression line no error)
+
+```
+
+
+### Q2 c) Do you consider any transformation on x or y? Explain
+```{r code11}
+production$xlog <- log(production$x)
+production$sqrtx <- sqrt(production$x)
+
+plot(production$x,production$y,main = "no transformation") 
+plot(production$xlog,production$y,main = "Log transformation") 
+plot(production$sqrtx,production$y,main = "sqrt transformation") 
+
+# Yes because when you transform the data it becomes more linear
+
+```
+
+### Q2 d) use the transformation sqrt(x) and obtiain the estimated linear regression transformation
+
+```{r code12}
+production$sqrtx <- sqrt(production$x)
+fit3 <- lm(y ~ sqrtx, data= production)
+summary(fit3)
+# the estimated transformation equation is y= 1.25 + 3.623xi
+```
+
+### Q2 e) Plot a scatter plot of the transformed data then add the estimated regression line on a graph. 
+
+```{r code13}
+production$sqrtx <- sqrt(production$x)
+fit3 <- lm(y ~ sqrtx, data= production)
+plot(production$sqrtx,production$y,main = "sqrtx") # more linear 
+lines(production$sqrtx,fit3$fitted.values)
+```
+
+### Q2 f) plot residuals against fitted values. What does plot show
+
+```{r code14}
+plot(fit3, which = c(1)) 
+
+```
+
+### Q2 g) plot qq plot
+
+```{r code15}
+plot(fit3, which = c(2)) 
+
+```
+
+### Q3 What is the reduced model? What are the degree of freedom of the reduced model?
+# The reduced model is:  E (yi) = B0 + 5Xi
+# The degrees of freedom is n-1 because only one parameter is being estimated (the y-intercept)
